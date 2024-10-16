@@ -4,7 +4,7 @@ from typing import Dict, Tuple, Union
 
 
 def load_model(model_name: str) -> torch.nn.Module:
-    if model == "vgg19":
+    if model_name == "vgg19":
         model = vgg19(weights="DEFAULT").features
     else:
         raise ValueError(f"Unsupported model: {model_name}")
