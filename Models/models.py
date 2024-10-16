@@ -18,13 +18,8 @@ def load_model(model_name: str) -> torch.nn.Module:
     return model
 
 
-model = load_model("vgg19")
-print(model)
 
-
-def extract_vgg_features(
-    model: torch.nn.Module, image: torch.Tensor
-) -> Tuple[Dict[str, torch.Tensor], Dict[str, torch.Tensor]]:
+def extract_vgg_features(model: torch.nn.Module, image: torch.Tensor) -> Tuple[Dict[str, torch.Tensor], Dict[str, torch.Tensor]]:
     # Define names mapping in the manner of Gateys et al.
     mapping = {
         "0": "conv1_1",
