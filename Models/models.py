@@ -18,32 +18,24 @@ def load_model(model_name: str) -> torch.nn.Module:
     return model
 
 
-
-def extract_vgg_features(model: torch.nn.Module, image: torch.Tensor) -> Tuple[Dict[str, torch.Tensor], Dict[str, torch.Tensor]]:
+def extract_vgg_features(
+    model: torch.nn.Module, image: torch.Tensor
+) -> Tuple[Dict[str, torch.Tensor], Dict[str, torch.Tensor]]:
     # Define names mapping in the manner of Gateys et al.
     mapping = {
         "0": "conv1_1",
         "5": "conv2_1",
         "10": "conv3_1",
         "19": "conv4_1",
-        "21": "conv4_2",
+        "21": "conv4_2",  # Content representation
         "28": "conv5_1",
     }
 
-    style_layers = {}
-    content_layer = {}
+    layers = {}
     x = image
     for name, layer in model._modules.items():
         x = layer(x)
         if name in mapping:
-            if name == "21":
-                content_layer[mapping[name]] = x
-            else:
-                style_layers[mapping[name]] = x
+            layers[mapping[name]] = x
 
-    if not content_layer:
-        raise ValueError("Content layer not found in the model")
-    if not style_layers:
-        raise ValueError("Style layers not found in the model")
-
-    return style_layers, content_layer
+    return layers
