@@ -19,13 +19,6 @@ def load_image(path):
     return img
 
 
-def generate_gaussian(tensor):
-    batch, channels, height, width = tensor.size()
-    img = torch.randn(batch, channels, height, width)
-
-    return img
-
-
 def gram_matrix(tensor):
     batch, channels, height, width = tensor.size()
     tensor = tensor.view(batch, channels, height * width)
@@ -45,14 +38,6 @@ def convert_images(tensor):
     return image
 
 
-def display_images(*images, titles=None):
-    fig, axs = plt.subplots(1, 4, figsize=(16, 6))
-
-    for i, img in enumerate(images):
-        axs[i].imshow(img)
-        axs[i].axis("off")
-        if titles and i < len(titles):
-            axs[i].set_title(titles[i])
-
-    plt.tight_layout()
-    plt.show()
+def save_image(tensor, path):
+    image = convert_images(tensor)
+    image.save(path)

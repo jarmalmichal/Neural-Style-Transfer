@@ -12,9 +12,6 @@ def load_model(model_name: str) -> torch.nn.Module:
     for param in model.parameters():
         param.requires_grad = False
 
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    model.to(device)
-
     return model
 
 
