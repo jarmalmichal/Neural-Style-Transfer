@@ -1,9 +1,7 @@
 import torch
 from torchvision.models import vgg19
-from typing import Dict, Tuple, Union
 
-
-def load_model(model_name: str) -> torch.nn.Module:
+def load_model(model_name):
     if model_name == "vgg19":
         model = vgg19(weights="DEFAULT").features
     else:
@@ -15,9 +13,7 @@ def load_model(model_name: str) -> torch.nn.Module:
     return model
 
 
-def extract_vgg_features(
-    model: torch.nn.Module, image: torch.Tensor
-) -> Tuple[Dict[str, torch.Tensor], Dict[str, torch.Tensor]]:
+def extract_vgg_features(model, image):
     # Define names mapping in the manner of Gateys et al.
     mapping = {
         "0": "conv1_1",

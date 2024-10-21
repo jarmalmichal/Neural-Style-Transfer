@@ -8,20 +8,21 @@ import matplotlib.pyplot as plt
 
 
 def load_image(path):
-    img = Image.open(path)
-
-    # Apply transformations
-    transform = v2.Compose(
-        [v2.Resize((512, 512)), v2.ToImage(), v2.ToDtype(torch.float32, scale=True)]
-    )
+    img = Image.open(path).convert('RGB')
+    
+    transform = v2.Compose([
+        v2.Resize((420, 420)),
+        v2.ToImage(),
+        v2.ToDtype(torch.float32, scale=True),
+    ])
+    
     img = transform(img).unsqueeze(0)
-
     return img
 
 
 def gram_matrix(tensor):
-    batch, channels, height, width = tensor.size()
-    tensor = tensor.view(batch, channels, height * width)
+    batch, dim, height, width = tensor.size()
+    tensor = tensor.view(batch, dim, height * width)
     tensor_T = tensor.transpose(-2, -1)
     gram = torch.bmm(tensor, tensor_T)
 

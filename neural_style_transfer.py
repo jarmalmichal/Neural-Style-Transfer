@@ -14,30 +14,34 @@ STYLE_DIR = os.path.join(IMAGES_DIR, "Style")
 RESULTS_DIR = os.path.join(IMAGES_DIR, "Results")
 
 
-def style_transfer(content_img, style_img, target_img, model, optimizer, layer_style_weights, style_weight, content_weight, steps):
+
+def style_transfer(content_img, style_img, target_img, model, optimizer, layer_weights, style_weight, content_weight, steps):
     mse_loss = MSELoss()
-    for i in range(steps):
-        optimizer.zero_grad()
+    content_features = models.extract_vgg_features(model, content_img)
+    style_features = models.extract_vgg_features(model, style_img)
 
-        target_img_layers = models.extract_vgg_features(model, target_img)
-        content_img_layers = models.extract_vgg_features(model, content_img)
-        style_img_layers = models.extract_vgg_features(model, style_img)
+    style_grams = {layer: utils.gram_matrix(style_features[layer]) for layer in style_features}
 
-        content_loss = mse_loss(target_img_layers["conv4_2"], content_img_layers["conv4_2"])
+    for i in range(1, steps+1):
+        target_features = models.extract_vgg_features(model, target_img)
+        content_loss = mse_loss(target_features["conv4_2"], content_features["conv4_2"])
+
         style_loss = 0
-        for name in layer_style_weights:
-            _, channels, height, width = target_img_layers[name].size()
-            style_img_gram = utils.gram_matrix(style_img_layers[name])
-            target_img_gram = utils.gram_matrix(target_img_layers[name])
-            layer_style_loss = layer_style_weights[name] * mse_loss(target_img_gram, style_img_gram)
-            style_loss += layer_style_loss / (channels * height * width)
-        
+        for layer in layer_weights:
+            target_feature = target_features[layer]
+            _, dim, height, width = target_feature.shape
+            target_gram = utils.gram_matrix(target_feature)
+            style_gram = style_grams[layer]
+            layer_style_loss = layer_weights[layer] * mse_loss(target_gram, style_gram)
+            style_loss += layer_style_loss / (dim * height * width)
+
         total_loss = style_weight * style_loss + content_weight * content_loss
+        optimizer.zero_grad()
         total_loss.backward()
         optimizer.step()
 
-        if i % 100 == 0:
-            print(f"Iteration: {i+1}/{steps}, Total loss: {total_loss.item():.4f}")
+        if i % 500 == 0:
+            print(f"Iteration: {i}/{steps}, Total loss: {total_loss.item()}")
     
     return target_img
 
@@ -48,7 +52,7 @@ if __name__ == "__main__":
     parser.add_argument("--target_img", type=str, choices=["content", "style", "random"], default="content", help="target image initialization method")
     parser.add_argument("--content_weight", type=float, default=1)
     parser.add_argument("--style_weight", type=float, default=1e6)
-    parser.add_argument("--steps", type=int, default=5000)
+    parser.add_argument("--steps", type=int, default=1000)
 
     args = parser.parse_args()
 
@@ -69,7 +73,7 @@ if __name__ == "__main__":
 
     target_img.requires_grad_(True).to(device)
 
-    layer_style_weights = {
+    layer_weights = {
         "conv1_1": 1.0,
         "conv2_1": 0.75,
         "conv3_1": 0.2,
@@ -81,7 +85,7 @@ if __name__ == "__main__":
     
     optimizer = Adam([target_img], lr=0.003)
 
-    stylized_img = style_transfer(content_img, style_img, target_img, model, optimizer, layer_style_weights, args.style_weight, args.content_weight, args.steps)
+    stylized_img = style_transfer(content_img, style_img, target_img, model, optimizer, layer_weights, args.style_weight, args.content_weight, args.steps)
 
     # Generate output filename based on input images
     content_name = os.path.splitext(args.content_img)[0]
