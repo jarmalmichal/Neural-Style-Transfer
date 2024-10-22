@@ -10,3 +10,5 @@ dependencies:
   - pytorch=2.4.1
   - torchvision=0.19.1
   - numpy=2.1.2
+  - pip:
+    - psutil==6.1.0

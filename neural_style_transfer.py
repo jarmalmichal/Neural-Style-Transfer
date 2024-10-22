@@ -14,15 +14,26 @@ STYLE_DIR = os.path.join(IMAGES_DIR, "Style")
 RESULTS_DIR = os.path.join(IMAGES_DIR, "Results")
 
 
-
-def style_transfer(content_img, style_img, target_img, model, optimizer, layer_weights, style_weight, content_weight, steps):
+def style_transfer(
+    content_img,
+    style_img,
+    target_img,
+    model,
+    optimizer,
+    layer_weights,
+    style_weight,
+    content_weight,
+    steps,
+):
     mse_loss = MSELoss()
     content_features = models.extract_vgg_features(model, content_img)
     style_features = models.extract_vgg_features(model, style_img)
 
-    style_grams = {layer: utils.gram_matrix(style_features[layer]) for layer in style_features}
+    style_grams = {
+        layer: utils.gram_matrix(style_features[layer]) for layer in style_features
+    }
 
-    for i in range(1, steps+1):
+    for i in range(1, steps + 1):
         target_features = models.extract_vgg_features(model, target_img)
         content_loss = mse_loss(target_features["conv4_2"], content_features["conv4_2"])
 
@@ -42,22 +53,29 @@ def style_transfer(content_img, style_img, target_img, model, optimizer, layer_w
 
         if i % 500 == 0:
             print(f"Iteration: {i}/{steps}, Total loss: {total_loss.item()}")
-    
+
     return target_img
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--content_img", type=str, help="content image name")
     parser.add_argument("--style_img", type=str, help="style image name")
-    parser.add_argument("--target_img", type=str, choices=["content", "style", "random"], default="content", help="target image initialization method")
+    parser.add_argument(
+        "--target_img",
+        type=str,
+        choices=["content", "style", "random"],
+        default="content",
+        help="target image initialization method",
+    )
     parser.add_argument("--content_weight", type=float, default=1)
-    parser.add_argument("--style_weight", type=float, default=1e6)
+    parser.add_argument("--style_weight", type=float, default=1e3)
     parser.add_argument("--steps", type=int, default=1000)
 
     args = parser.parse_args()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    
+
     content_path = os.path.join(CONTENT_DIR, args.content_img)
     style_path = os.path.join(STYLE_DIR, args.style_img)
 
@@ -82,10 +100,20 @@ if __name__ == "__main__":
     }
 
     model = models.load_model("vgg19").to(device)
-    
+
     optimizer = Adam([target_img], lr=0.003)
 
-    stylized_img = style_transfer(content_img, style_img, target_img, model, optimizer, layer_weights, args.style_weight, args.content_weight, args.steps)
+    stylized_img = style_transfer(
+        content_img,
+        style_img,
+        target_img,
+        model,
+        optimizer,
+        layer_weights,
+        args.style_weight,
+        args.content_weight,
+        args.steps,
+    )
 
     # Generate output filename based on input images
     content_name = os.path.splitext(args.content_img)[0]

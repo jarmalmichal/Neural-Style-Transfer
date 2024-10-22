@@ -1,6 +1,7 @@
 import torch
 from torchvision.models import vgg19
 
+
 def load_model(model_name):
     if model_name == "vgg19":
         model = vgg19(weights="DEFAULT").features
