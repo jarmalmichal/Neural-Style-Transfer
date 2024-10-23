@@ -21,8 +21,8 @@ def load_image(path):
 
 
 def gram_matrix(tensor):
-    batch, dim, height, width = tensor.size()
-    tensor = tensor.view(batch, dim, height * width)
+    batch, channels, height, width = tensor.size()
+    tensor = tensor.view(batch, channels, height * width)
     tensor_T = tensor.transpose(-2, -1)
     gram = torch.bmm(tensor, tensor_T)
 
