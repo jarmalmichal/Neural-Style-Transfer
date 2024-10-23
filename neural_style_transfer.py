@@ -90,9 +90,14 @@ if __name__ == "__main__":
         default="content",
         help="target image initialization method",
     )
+    parser.add_argument(
+        "--model", type=str, choices=["vgg19", "resnet50"], default="vgg19"
+    )
     parser.add_argument("--content_weight", type=float, default=1)
     parser.add_argument("--style_weight", type=float, default=1e3)
-    parser.add_argument("--tv_weight", type=float, default=1e-3)
+    parser.add_argument(
+        "--tv_weight", type=float, default=1e-3, help="weight for total variation loss"
+    )
     parser.add_argument("--steps", type=int, default=3000)
 
     args = parser.parse_args()
@@ -122,7 +127,7 @@ if __name__ == "__main__":
         "conv5_1": 0.2,
     }
 
-    model = models.load_model("vgg19").to(device)
+    model = models.load_model(args.model).to(device)
 
     optimizer = Adam([target_img], lr=0.001)
 

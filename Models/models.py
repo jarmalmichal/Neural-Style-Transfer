@@ -1,10 +1,14 @@
 import torch
-from torchvision.models import vgg19
+from torchvision.models import vgg19, resnet50
 
 
 def load_model(model_name):
     if model_name == "vgg19":
         model = vgg19(weights="DEFAULT").features
+    elif model_name == "resnet50":
+        model = resnet50(weights="DEFAULT")
+        # Remove the final fully connected layer
+        model = torch.nn.Sequential(*list(model.children())[:-1])
     else:
         raise ValueError(f"Unsupported model: {model_name}")
 
