@@ -117,7 +117,7 @@ if __name__ == "__main__":
     else:
         target_img = torch.randn_like(content_img)
 
-    target_img.requires_grad_(True).to(device)
+    target_img.requires_grad_(True)
 
     layer_weights = {
         "conv1_1": 1,
