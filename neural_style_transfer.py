@@ -14,6 +14,18 @@ STYLE_DIR = os.path.join(IMAGES_DIR, "Style")
 RESULTS_DIR = os.path.join(IMAGES_DIR, "Results")
 
 
+def compute_tv_loss(img):
+    """Compute total variation loss using L2 norm"""
+    batch_size = img.size(0)
+    h_x = img.size(2)
+    w_x = img.size(3)
+    diff_x = img[:, :, :, 1:] - img[:, :, :, :-1]
+    diff_y = img[:, :, 1:, :] - img[:, :, :-1, :]
+    tv_loss = (torch.sum(diff_x**2) + torch.sum(diff_y**2)) / (batch_size * h_x * w_x)
+
+    return tv_loss
+
+
 def style_transfer(
     content_img,
     style_img,
@@ -23,6 +35,7 @@ def style_transfer(
     layer_weights,
     style_weight,
     content_weight,
+    tv_weight,
     steps,
 ):
     mse_loss = MSELoss()
@@ -46,13 +59,22 @@ def style_transfer(
             layer_style_loss = layer_weights[layer] * mse_loss(target_gram, style_gram)
             style_loss += layer_style_loss / (dim * height * width)
 
-        total_loss = style_weight * style_loss + content_weight * content_loss
+        tv_loss = compute_tv_loss(target_img)
+
+        total_loss = (
+            style_weight * style_loss
+            + content_weight * content_loss
+            + tv_weight * tv_loss
+        )
         optimizer.zero_grad()
         total_loss.backward()
         optimizer.step()
 
         if i % 500 == 0:
-            print(f"Iteration: {i}/{steps}, Total loss: {total_loss.item()}")
+            print(f"Iteration: {i}/{steps}")
+            print(
+                f"Total loss: {total_loss:.4f}, Content loss: {content_loss.item():.4f}, Style loss: {style_loss.item():.4f}, TV loss: {tv_loss.item():.4f}"
+            )
 
     return target_img
 
@@ -70,7 +92,8 @@ if __name__ == "__main__":
     )
     parser.add_argument("--content_weight", type=float, default=1)
     parser.add_argument("--style_weight", type=float, default=1e3)
-    parser.add_argument("--steps", type=int, default=1000)
+    parser.add_argument("--tv_weight", type=float, default=1e-3)
+    parser.add_argument("--steps", type=int, default=3000)
 
     args = parser.parse_args()
 
@@ -92,7 +115,7 @@ if __name__ == "__main__":
     target_img.requires_grad_(True).to(device)
 
     layer_weights = {
-        "conv1_1": 1.0,
+        "conv1_1": 1,
         "conv2_1": 0.75,
         "conv3_1": 0.2,
         "conv4_1": 0.2,
@@ -101,7 +124,7 @@ if __name__ == "__main__":
 
     model = models.load_model("vgg19").to(device)
 
-    optimizer = Adam([target_img], lr=0.003)
+    optimizer = Adam([target_img], lr=0.001)
 
     stylized_img = style_transfer(
         content_img,
@@ -112,6 +135,7 @@ if __name__ == "__main__":
         layer_weights,
         args.style_weight,
         args.content_weight,
+        args.tv_weight,
         args.steps,
     )
 
