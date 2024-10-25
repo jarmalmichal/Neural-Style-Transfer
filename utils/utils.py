@@ -2,7 +2,6 @@ import torch
 import torchvision.transforms.v2 as v2
 import numpy as np
 from PIL import Image
-import os
 
 
 def load_image(path):
