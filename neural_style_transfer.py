@@ -39,22 +39,24 @@ def style_transfer(
     steps,
 ):
     mse_loss = MSELoss()
-    content_features = models.extract_vgg_features(model, content_img)
-    style_features = models.extract_vgg_features(model, style_img)
+    content_features = models.extract_content_features(model, content_img)
+    style_features = models.extract_style_features(model, style_img)
 
     style_grams = {
         layer: utils.gram_matrix(style_features[layer]) for layer in style_features
     }
 
     for i in range(1, steps + 1):
-        target_features = models.extract_vgg_features(model, target_img)
-        content_loss = mse_loss(target_features["conv4_2"], content_features["conv4_2"])
+        target_content = models.extract_content_features(model, target_img)
+        target_styles = models.extract_style_features(model, target_img)
+
+        content_loss = mse_loss(target_content["conv4_2"], content_features["conv4_2"])
 
         style_loss = 0
         for layer in layer_weights:
-            target_feature = target_features[layer]
-            _, dim, height, width = target_feature.shape
-            target_gram = utils.gram_matrix(target_feature)
+            target_style = target_styles[layer]
+            _, dim, height, width = target_style.shape
+            target_gram = utils.gram_matrix(target_style)
             style_gram = style_grams[layer]
             layer_style_loss = layer_weights[layer] * mse_loss(target_gram, style_gram)
             style_loss += layer_style_loss / (dim * height * width)
@@ -91,12 +93,12 @@ if __name__ == "__main__":
         help="target image initialization method",
     )
     parser.add_argument(
-        "--model", type=str, choices=["vgg19", "resnet50"], default="vgg19"
+        "--model", type=str, choices=["vgg19", "vgg16"], default="vgg19"
     )
     parser.add_argument("--content_weight", type=float, default=1)
     parser.add_argument("--style_weight", type=float, default=1e3)
     parser.add_argument(
-        "--tv_weight", type=float, default=1e-3, help="weight for total variation loss"
+        "--tv_weight", type=float, default=1e3, help="weight for total variation loss"
     )
     parser.add_argument("--steps", type=int, default=3000)
 
@@ -147,7 +149,7 @@ if __name__ == "__main__":
     # Generate output filename based on input images
     content_name = os.path.splitext(args.content_img)[0]
     style_name = os.path.splitext(args.style_img)[0]
-    output_filename = f"{content_name}_stylized_by_{style_name}.jpg"
+    output_filename = f"{content_name}_stylized_by_{style_name}_using_{args.model}.jpg"
     output_path = os.path.join(RESULTS_DIR, output_filename)
 
     # Save the output image in the RESULTS directory
