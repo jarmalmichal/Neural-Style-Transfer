@@ -15,7 +15,7 @@ RESULTS_DIR = os.path.join(IMAGES_DIR, "Results")
 
 
 def compute_tv_loss(img):
-    """Compute total variation loss using L2 norm"""
+    # Calculate total variation loss
     batch_size = img.size(0)
     h_x = img.size(2)
     w_x = img.size(3)
@@ -95,10 +95,10 @@ if __name__ == "__main__":
     parser.add_argument(
         "--model", type=str, choices=["vgg19", "vgg16"], default="vgg19"
     )
-    parser.add_argument("--content_weight", type=float, default=1)
-    parser.add_argument("--style_weight", type=float, default=1e3)
+    parser.add_argument("--content_weight", type=float, default=1e5)
+    parser.add_argument("--style_weight", type=float, default=1e5)
     parser.add_argument(
-        "--tv_weight", type=float, default=1e3, help="weight for total variation loss"
+        "--tv_weight", type=float, default=1e-1, help="weight for total variation loss"
     )
     parser.add_argument("--steps", type=int, default=3000)
 
@@ -131,7 +131,7 @@ if __name__ == "__main__":
 
     model = models.load_model(args.model).to(device)
 
-    optimizer = Adam([target_img], lr=0.001)
+    optimizer = Adam([target_img], lr=0.1)
 
     stylized_img = style_transfer(
         content_img,
