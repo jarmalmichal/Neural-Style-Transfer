@@ -3,15 +3,15 @@ from torch.optim import Adam
 from torch.nn import MSELoss
 import os
 import argparse
-from Models import models
+from models import models
 from utils import utils
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-IMAGES_DIR = os.path.join(BASE_DIR, "Images")
-CONTENT_DIR = os.path.join(IMAGES_DIR, "Content")
-STYLE_DIR = os.path.join(IMAGES_DIR, "Style")
-RESULTS_DIR = os.path.join(IMAGES_DIR, "Results")
+IMAGES_DIR = os.path.join(BASE_DIR, "images")
+CONTENT_DIR = os.path.join(IMAGES_DIR, "content")
+STYLE_DIR = os.path.join(IMAGES_DIR, "style")
+RESULTS_DIR = os.path.join(IMAGES_DIR, "results")
 
 
 def compute_tv_loss(img):
@@ -100,7 +100,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--tv_weight", type=float, default=1e-1, help="weight for total variation loss"
     )
-    parser.add_argument("--steps", type=int, default=3000)
+    parser.add_argument("--lr", type=float, default=0.1, help="learning rate")
+    parser.add_argument("--steps", type=int, default=3000, help="number of iterations")
 
     args = parser.parse_args()
 
@@ -131,7 +132,7 @@ if __name__ == "__main__":
 
     model = models.load_model(args.model).to(device)
 
-    optimizer = Adam([target_img], lr=0.1)
+    optimizer = Adam([target_img], lr=args.lr)
 
     stylized_img = style_transfer(
         content_img,
