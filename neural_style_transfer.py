@@ -100,7 +100,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--tv_weight", type=float, default=1e-1, help="weight for total variation loss"
     )
-    parser.add_argument("--lr", type=float, default=0.1, help="learning rate")
+    parser.add_argument("--lr", type=float, default=0.01, help="learning rate")
     parser.add_argument("--steps", type=int, default=3000, help="number of iterations")
 
     args = parser.parse_args()
