@@ -15,7 +15,7 @@ RESULTS_DIR = os.path.join(IMAGES_DIR, "results")
 
 
 def compute_tv_loss(img):
-    # Calculate total variation loss
+    # Computes total variation loss
     batch_size = img.size(0)
     h_x = img.size(2)
     w_x = img.size(3)
@@ -32,37 +32,48 @@ def style_transfer(
     target_img,
     model,
     optimizer,
-    layer_weights,
+    layer_style_weights,
     style_weight,
     content_weight,
     tv_weight,
     steps,
 ):
     mse_loss = MSELoss()
-    content_features = models.extract_content_features(model, content_img)
-    style_features = models.extract_style_features(model, style_img)
+    # Extract feature maps that represent content and style for both images
+    content_features = models.extract_features(model, content_img, mode='content')
+    style_features = models.extract_features(model, style_img, mode='style')
 
+    # Precompute gram matrices for style image
     style_grams = {
         layer: utils.gram_matrix(style_features[layer]) for layer in style_features
     }
 
     for i in range(1, steps + 1):
-        target_content = models.extract_content_features(model, target_img)
-        target_styles = models.extract_style_features(model, target_img)
-
-        content_loss = mse_loss(target_content["conv4_2"], content_features["conv4_2"])
+        # Extract feature maps that represent content and style for target image
+        target_content_features, target_style_features = models.extract_features(model, target_img, mode='all')
+        # Calculate content loss as MSE
+        content_loss = mse_loss(target_content_features["conv4_2"], content_features["conv4_2"])
 
         style_loss = 0
-        for layer in layer_weights:
-            target_style = target_styles[layer]
+        for layer in layer_style_weights:
+            # Extract current layer's feature maps
+            target_style = target_style_features[layer]
             _, dim, height, width = target_style.shape
+
+            # Calculate gram matrix for target image and extract precomputed gram for style image
             target_gram = utils.gram_matrix(target_style)
             style_gram = style_grams[layer]
-            layer_style_loss = layer_weights[layer] * mse_loss(target_gram, style_gram)
+
+            # Calculate weighted MSE loss between Gram matrices
+            layer_style_loss = layer_style_weights[layer] * mse_loss(target_gram, style_gram)
+            
+            # Normalize by feature map dimensions and add to "total" style loss
             style_loss += layer_style_loss / (dim * height * width)
 
+        # Calculate total variation loss
         tv_loss = compute_tv_loss(target_img)
 
+        # Weight and combine all losses
         total_loss = (
             style_weight * style_loss
             + content_weight * content_loss
@@ -122,7 +133,7 @@ if __name__ == "__main__":
 
     target_img.requires_grad_(True)
 
-    layer_weights = {
+    layer_style_weights = {
         "conv1_1": 1,
         "conv2_1": 0.75,
         "conv3_1": 0.2,
@@ -140,7 +151,7 @@ if __name__ == "__main__":
         target_img,
         model,
         optimizer,
-        layer_weights,
+        layer_style_weights,
         args.style_weight,
         args.content_weight,
         args.tv_weight,
