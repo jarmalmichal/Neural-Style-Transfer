@@ -1,95 +1,12 @@
 import torch
 from torch.optim import Adam
-from torch.nn import MSELoss
 import os
 import argparse
-from models import models
-from utils import utils
 
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-IMAGES_DIR = os.path.join(BASE_DIR, "images")
-CONTENT_DIR = os.path.join(IMAGES_DIR, "content")
-STYLE_DIR = os.path.join(IMAGES_DIR, "style")
-RESULTS_DIR = os.path.join(IMAGES_DIR, "results")
-
-
-def compute_tv_loss(img):
-    # Computes total variation loss
-    batch_size = img.size(0)
-    h_x = img.size(2)
-    w_x = img.size(3)
-    diff_x = img[:, :, :, 1:] - img[:, :, :, :-1]
-    diff_y = img[:, :, 1:, :] - img[:, :, :-1, :]
-    tv_loss = (torch.sum(diff_x**2) + torch.sum(diff_y**2)) / (batch_size * h_x * w_x)
-
-    return tv_loss
-
-
-def style_transfer(
-    content_img,
-    style_img,
-    target_img,
-    model,
-    optimizer,
-    layer_style_weights,
-    style_weight,
-    content_weight,
-    tv_weight,
-    steps,
-):
-    mse_loss = MSELoss()
-    # Extract feature maps that represent content and style for both images
-    content_features = models.extract_features(model, content_img, mode='content')
-    style_features = models.extract_features(model, style_img, mode='style')
-
-    # Precompute gram matrices for style image
-    style_grams = {
-        layer: utils.gram_matrix(style_features[layer]) for layer in style_features
-    }
-
-    for i in range(1, steps + 1):
-        # Extract feature maps that represent content and style for target image
-        target_content_features, target_style_features = models.extract_features(model, target_img, mode='all')
-        # Calculate content loss as MSE
-        content_loss = mse_loss(target_content_features["conv4_2"], content_features["conv4_2"])
-
-        style_loss = 0
-        for layer in layer_style_weights:
-            # Extract current layer's feature maps
-            target_style = target_style_features[layer]
-            _, dim, height, width = target_style.shape
-
-            # Calculate gram matrix for target image and extract precomputed gram for style image
-            target_gram = utils.gram_matrix(target_style)
-            style_gram = style_grams[layer]
-
-            # Calculate weighted MSE loss between Gram matrices
-            layer_style_loss = layer_style_weights[layer] * mse_loss(target_gram, style_gram)
-            
-            # Normalize by feature map dimensions and add to "total" style loss
-            style_loss += layer_style_loss / (dim * height * width)
-
-        # Calculate total variation loss
-        tv_loss = compute_tv_loss(target_img)
-
-        # Weight and combine all losses
-        total_loss = (
-            style_weight * style_loss
-            + content_weight * content_loss
-            + tv_weight * tv_loss
-        )
-        optimizer.zero_grad()
-        total_loss.backward()
-        optimizer.step()
-
-        if i % 500 == 0:
-            print(f"Iteration: {i}/{steps}")
-            print(
-                f"Total loss: {total_loss:.4f}, Content loss: {content_loss.item():.4f}, Style loss: {style_loss.item():.4f}, TV loss: {tv_loss.item():.4f}"
-            )
-
-    return target_img
+from src.models import models
+from src.utils import utils
+from src.train import vgg_style_transfer, alexnet_style_transfer
+from src.config import config
 
 
 if __name__ == "__main__":
@@ -104,7 +21,7 @@ if __name__ == "__main__":
         help="target image initialization method",
     )
     parser.add_argument(
-        "--model", type=str, choices=["vgg19", "vgg16"], default="vgg19"
+        "--model", type=str, choices=["vgg19", "vgg16", "alexnet"], default="vgg19"
     )
     parser.add_argument("--content_weight", type=float, default=1e5)
     parser.add_argument("--style_weight", type=float, default=1e5)
@@ -118,8 +35,8 @@ if __name__ == "__main__":
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    content_path = os.path.join(CONTENT_DIR, args.content_img)
-    style_path = os.path.join(STYLE_DIR, args.style_img)
+    content_path = os.path.join(config.CONTENT_DIR, args.content_img)
+    style_path = os.path.join(config.STYLE_DIR, args.style_img)
 
     content_img = utils.load_image(content_path).to(device)
     style_img = utils.load_image(style_path).to(device)
@@ -133,37 +50,45 @@ if __name__ == "__main__":
 
     target_img.requires_grad_(True)
 
-    layer_style_weights = {
-        "conv1_1": 1,
-        "conv2_1": 0.75,
-        "conv3_1": 0.2,
-        "conv4_1": 0.2,
-        "conv5_1": 0.2,
-    }
-
     model = models.load_model(args.model).to(device)
 
     optimizer = Adam([target_img], lr=args.lr)
 
-    stylized_img = style_transfer(
-        content_img,
-        style_img,
-        target_img,
-        model,
-        optimizer,
-        layer_style_weights,
-        args.style_weight,
-        args.content_weight,
-        args.tv_weight,
-        args.steps,
-    )
+    if args.model in ["vgg19", "vgg16"]:
+        layer_style_weights = config.VGG_STYLE_WEIGHTS
+        stylized_img = vgg_style_transfer(
+            content_img,
+            style_img,
+            target_img,
+            model,
+            optimizer,
+            layer_style_weights,
+            args.style_weight,
+            args.content_weight,
+            args.tv_weight,
+            args.steps,
+        )
+    else:
+        layer_style_weights = config.ALEXNET_STYLE_WEIGHTS
+        stylized_img = alexnet_style_transfer(
+            content_img,
+            style_img,
+            target_img,
+            model,
+            optimizer,
+            layer_style_weights,
+            args.style_weight,
+            args.content_weight,
+            args.tv_weight,
+            args.steps,
+        )
 
     # Generate output filename based on input images
     content_name = os.path.splitext(args.content_img)[0]
     style_name = os.path.splitext(args.style_img)[0]
     output_filename = f"{content_name}_stylized_by_{style_name}_using_{args.model}.jpg"
-    output_path = os.path.join(RESULTS_DIR, output_filename)
+    output_path = os.path.join(config.RESULTS_DIR, output_filename)
 
-    # Save the output image in the RESULTS directory
+    # Save the output image in the results directory
     utils.save_image(stylized_img, output_path)
     print(f"Stylized image saved as {output_path}")
