@@ -22,6 +22,9 @@ def extract_vgg_features(model, image, mode="all"):
     """
     Extract feature maps based on mode
     mode: 'all', 'content', 'style'
+
+    Layer choice (both style and content) are based on Gatys et al.
+    https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Gatys_Image_Style_Transfer_CVPR_2016_paper.pdf
     """
     if mode == "content":
         content_features = {}
