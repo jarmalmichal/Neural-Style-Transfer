@@ -56,8 +56,7 @@ def extract_vgg_features(model, image, mode="all"):
         return style_features
 
     else:
-        # mode == 'all'
-        # Need both content and style for target image
+        # Need both for target image
         style_layers = {
             "0": "conv1_1",
             "5": "conv2_1",
@@ -82,6 +81,9 @@ def extract_alexnet_features(model, image, mode="all"):
     """
     Extract feature maps based on mode
     mode: 'all', 'content', 'style'
+
+    In case of AlexNet layer choice must be different
+    Selected layers have empirically shown good results
     """
     if mode == "content":
         content_features = {}
@@ -111,8 +113,7 @@ def extract_alexnet_features(model, image, mode="all"):
         return style_features
 
     else:
-        # mode == 'all'
-        # Need both content and style for target image
+        # Need both for target image
         style_layers = {
             "0": "conv1",
             "3": "conv2",
