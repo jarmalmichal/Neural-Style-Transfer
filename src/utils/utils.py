@@ -2,6 +2,7 @@ import torch
 import torchvision.transforms.v2 as v2
 import numpy as np
 from PIL import Image
+from src.config import config
 
 
 def load_image(path):
@@ -11,7 +12,7 @@ def load_image(path):
             v2.Resize((1024, 1024)),
             v2.ToImage(),
             v2.ToDtype(torch.float32, scale=True),
-            v2.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
+            v2.Normalize(config.IMAGENET_MEAN, config.IMAGENET_STD),
         ]
     )
     img = transform(img).unsqueeze(0)
@@ -20,7 +21,14 @@ def load_image(path):
 
 
 def compute_tv_loss(img):
-    # Computes total variation loss
+    """
+    Calculate total variation loss
+
+    Based on Johnson et al.
+    In this implementation it's used as a loss and not as a regularizer but effect is the same
+
+    https://arxiv.org/abs/1603.08155
+    """
     batch_size = img.size(0)
     h_x = img.size(2)
     w_x = img.size(3)
