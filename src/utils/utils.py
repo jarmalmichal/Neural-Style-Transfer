@@ -49,11 +49,11 @@ def gram_matrix(tensor):
 
 
 def convert_images(tensor):
-    image = tensor.to("cpu").clone().detach()
-    image = image.numpy().squeeze()
+    image = tensor.to("cpu").clone().detach().numpy().squeeze()
+    # Transpose because numpy expects H, W, C
     image = image.transpose(1, 2, 0)
+    # Unnormalize
     image = image * np.array((0.229, 0.224, 0.225)) + np.array((0.485, 0.456, 0.406))
-    image = image.clip(0, 1)
     image = (image * 255).astype(np.uint8)
     image = Image.fromarray(image)
 
