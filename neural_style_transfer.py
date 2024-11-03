@@ -5,7 +5,7 @@ import argparse
 
 from src.models import models
 from src.utils import utils
-from src.train import vgg_style_transfer, alexnet_style_transfer
+from src.train import style_transfer
 from src.config import config
 
 
@@ -56,39 +56,29 @@ if __name__ == "__main__":
 
     target_img.requires_grad_(True)
 
+    if args.model in ["vgg19", "vgg16"]:
+        layer_style_weights = config.VGG_STYLE_WEIGHTS
+    else:
+        layer_style_weights = config.ALEXNET_STYLE_WEIGHTS
+
     model = models.load_model(args.model).to(device)
 
     optimizer = Adam([target_img], lr=args.lr)
 
     print(f"Running on {device} device")
-    if args.model in ["vgg19", "vgg16"]:
-        layer_style_weights = config.VGG_STYLE_WEIGHTS
-        stylized_img = vgg_style_transfer(
+    stylized_img = style_transfer(
             content_img,
             style_img,
             target_img,
             model,
+            args.model,
             optimizer,
             layer_style_weights,
             args.style_weight,
             args.content_weight,
             args.tv_weight,
             args.steps,
-        )
-    else:
-        layer_style_weights = config.ALEXNET_STYLE_WEIGHTS
-        stylized_img = alexnet_style_transfer(
-            content_img,
-            style_img,
-            target_img,
-            model,
-            optimizer,
-            layer_style_weights,
-            args.style_weight,
-            args.content_weight,
-            args.tv_weight,
-            args.steps,
-        )
+    )
 
     # Generate output filename based on input images
     content_name = os.path.splitext(args.content_img)[0]
