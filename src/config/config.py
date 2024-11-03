@@ -7,6 +7,10 @@ CONTENT_DIR = os.path.join(IMAGES_DIR, "content")
 STYLE_DIR = os.path.join(IMAGES_DIR, "style")
 RESULTS_DIR = os.path.join(IMAGES_DIR, "results")
 
+# ImageNet specific mean and std
+IMAGENET_MEAN = (0.485, 0.456, 0.406)
+IMAGENET_STD = (0.229, 0.224, 0.225)
+
 # Model specific style weights
 VGG_STYLE_WEIGHTS = {
     "conv1_1": 1,
