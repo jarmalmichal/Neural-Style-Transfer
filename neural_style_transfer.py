@@ -33,7 +33,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # Check for cuda or mps for MacOS
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+    elif torch.backends.mps.is_available():
+        device = torch.device("mps")
+    else:
+        device = torch.device("cpu")
 
     content_path = os.path.join(config.CONTENT_DIR, args.content_img)
     style_path = os.path.join(config.STYLE_DIR, args.style_img)
@@ -54,6 +60,7 @@ if __name__ == "__main__":
 
     optimizer = Adam([target_img], lr=args.lr)
 
+    print(f"Running on {device} device")
     if args.model in ["vgg19", "vgg16"]:
         layer_style_weights = config.VGG_STYLE_WEIGHTS
         stylized_img = vgg_style_transfer(
