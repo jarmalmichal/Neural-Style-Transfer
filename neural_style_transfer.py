@@ -28,7 +28,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--tv_weight", type=float, default=1e-1, help="weight for total variation loss"
     )
-    parser.add_argument("--optimizer", type=str, choices=["lbfgs", "adam"], default="adam")
+    parser.add_argument("--optimizer", type=str, choices=["adam"], default="adam")
     parser.add_argument("--lr", type=float, default=0.01, help="learning rate")
     parser.add_argument("--steps", type=int, default=3000, help="number of iterations")
 
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     if args.optimizer == "adam":
         optimizer = Adam([target_img], lr=args.lr)
     else:
-        optimizer = LBFGS([target_img], max_iter=20, line_search_fn='strong_wolfe')
+        pass
 
     print(f"Running on {device} device")
     stylized_img = style_transfer(
