@@ -28,11 +28,23 @@ if __name__ == "__main__":
     parser.add_argument(
         "--tv_weight", type=float, default=1e-1, help="weight for total variation loss"
     )
-    parser.add_argument("--optimizer", type=str, choices=["adam"], default="adam")
-    parser.add_argument("--lr", type=float, default=0.01, help="learning rate")
-    parser.add_argument("--steps", type=int, default=3000, help="number of iterations")
+    parser.add_argument(
+        "--optimizer", 
+        type=str, 
+        choices=["adam", "lbfgs"], 
+        default="lbfgs",
+        help="optimizer choice (adam: 3000 steps, lbfgs: 1000 steps)"
+    )
+    parser.add_argument("--lr", type=float, help="learning rate (default: 1.0 for LBFGS, 0.01 for Adam)")
+    parser.add_argument("--steps", type=int, help="number of iterations (default: 3000 for Adam, 1000 for LBFGS)")
 
     args = parser.parse_args()
+
+    # Set default steps and learning rate based on optimizer
+    if args.steps is None:
+        args.steps = 1000 if args.optimizer == "lbfgs" else 3000
+    if args.lr is None:
+        args.lr = 1.0 if args.optimizer == "lbfgs" else 0.01
 
     # Check for cuda or mps for MacOS
     if torch.cuda.is_available():
@@ -67,9 +79,11 @@ if __name__ == "__main__":
     if args.optimizer == "adam":
         optimizer = Adam([target_img], lr=args.lr)
     else:
-        pass
+        optimizer = LBFGS([target_img], lr=args.lr)
 
     print(f"Running on {device} device")
+    print(f"Using {args.optimizer} optimizer with {args.steps} steps")
+    
     stylized_img = style_transfer(
             content_img,
             style_img,
@@ -87,7 +101,7 @@ if __name__ == "__main__":
     # Generate output filename based on input images
     content_name = os.path.splitext(args.content_img)[0]
     style_name = os.path.splitext(args.style_img)[0]
-    output_filename = f"{content_name}_stylized_by_{style_name}_using_{args.model}.jpg"
+    output_filename = f"{content_name}_stylized_by_{style_name}_using_{args.model}_{args.optimizer}.jpg"
     output_path = os.path.join(config.RESULTS_DIR, output_filename)
 
     # Save the output image in the results directory
