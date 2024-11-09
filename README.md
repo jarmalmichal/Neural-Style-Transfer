@@ -9,7 +9,6 @@ loosely based on the paper Image Style Transfer Using Convolutional Neural Netwo
 * Different target image initialization method
 * Total Variation loss
 * Configurable content, style and tv weights, learning rate (for Adam) and number of steps
-* MPS support for MacOS (besides CUDA)
 
 
 **Installation**
@@ -38,14 +37,22 @@ Content images:
 
 * Photo by Sophie Otto: https://www.pexels.com/photo/city-hall-in-hamburg-by-the-river-20347993/
 
-* Photo by Jeswin Thomas: https://www.pexels.com/photo/mosque-1007426/
-
-* Photo by Mateusz Sałaciak: https://www.pexels.com/photo/white-and-brown-concrete-building-beside-body-of-water-4275890/
-
 * Photo by Ilo Frey: https://www.pexels.com/photo/photo-of-yellow-and-blue-macaw-with-one-wing-open-perched-on-a-wooden-stick-2317904/
+
+* Photo by Pixabay: https://www.pexels.com/photo/church-beside-sea-532581/
 
 Style images:
 
-* The Starry Night - Vincent van Gogh, Public domain, via Wikimedia Commons
+* The Starry Night, Vincent van Gogh, Public domain, via Wikimedia Commons
 
-* 
+* The Great Wave off Kanagawa, After Katsushika Hokusai, Public domain, via Wikimedia Commons
+
+* Adolphe joseph thomas - monticelli bouquet of flowers, WikiArt Dataset - https://github.com/cs-chan/ArtGAN/tree/master/WikiArt%20Dataset
+
+* Edvard Munch, 1893, The Scream, Public domain, via Wikimedia Commons
+
+* Composition VII, Wassily Kandinsky 1913, Public domain, via Wikimedia Commons
+
+* Albert Gleizes, football players 1912, WikiArt Dataset - https://github.com/cs-chan/ArtGAN/tree/master/WikiArt%20Dataset
+
+* sketch.jpg from https://www.pxfuel.com/en/

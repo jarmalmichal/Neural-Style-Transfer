@@ -52,11 +52,9 @@ if __name__ == "__main__":
     if args.lr is None:
         args.lr = 0.1  # lr for Adam, we don't have to set for lbfgs
 
-    # Check for cuda or mps (for MacOS)
+    # Check for cuda
     if torch.cuda.is_available():
         device = torch.device("cuda")
-    elif torch.backends.mps.is_available():
-        device = torch.device("mps")
     else:
         device = torch.device("cpu")
 
