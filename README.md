@@ -47,12 +47,12 @@ Style images:
 
 * The Great Wave off Kanagawa, After Katsushika Hokusai, Public domain, via Wikimedia Commons
 
-* Adolphe joseph thomas - monticelli bouquet of flowers, WikiArt Dataset - https://github.com/cs-chan/ArtGAN/tree/master/WikiArt%20Dataset
+* Adolphe Joseph Thomas, Bouquet of Flowers, WikiArt Dataset - https://github.com/cs-chan/ArtGAN/tree/master/WikiArt%20Dataset
 
 * Edvard Munch, 1893, The Scream, Public domain, via Wikimedia Commons
 
 * Composition VII, Wassily Kandinsky 1913, Public domain, via Wikimedia Commons
 
-* Albert Gleizes, football players 1912, WikiArt Dataset - https://github.com/cs-chan/ArtGAN/tree/master/WikiArt%20Dataset
+* Albert Gleizes, Football Players 1912, WikiArt Dataset - https://github.com/cs-chan/ArtGAN/tree/master/WikiArt%20Dataset
 
 * sketch.jpg from https://www.pxfuel.com/en/
