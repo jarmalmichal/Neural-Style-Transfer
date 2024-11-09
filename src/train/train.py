@@ -48,17 +48,17 @@ def style_transfer(
 
     # Calculate grams
     style_grams = compute_grams(style_features)
-    
+
     # Print frequency based on optimizer type
     print_freq = 100 if isinstance(optimizer, torch.optim.LBFGS) else 500
 
     if isinstance(optimizer, torch.optim.LBFGS):
-        # Ensure target_img is contiguous for LBFGS
+        # Make sure that target_img is contiguous for LBFGS
         target_img.data = target_img.data.contiguous()
-        
+
         def closure():
             optimizer.zero_grad()
-            
+
             # Extract feature maps that represent content and style for target image
             target_content_features, target_style_features = extract_features(
                 model, target_img, model_name, mode="all"
@@ -100,14 +100,14 @@ def style_transfer(
             total_loss.backward()
             if target_img.grad is not None:
                 target_img.grad.data = target_img.grad.data.contiguous()
-            
+
             closure.loss_values = {
-                'total': total_loss.item(),
-                'content': content_loss.item(),
-                'style': style_loss.item(),
-                'tv': tv_loss.item()
+                "total": total_loss.item(),
+                "content": content_loss.item(),
+                "style": style_loss.item(),
+                "tv": tv_loss.item(),
             }
-            
+
             return total_loss
 
         for i in range(1, steps + 1):
@@ -115,14 +115,13 @@ def style_transfer(
                 optimizer.step(closure)
             except RuntimeError as e:
                 if "view size is not compatible" in str(e):
-                    # If we still get view error, try to recover
                     target_img.data = target_img.data.contiguous()
                     if target_img.grad is not None:
                         target_img.grad.data = target_img.grad.data.contiguous()
                     optimizer.step(closure)
                 else:
                     raise e
-            
+
             if i % print_freq == 0:
                 losses = closure.loss_values
                 print(f"Iteration: {i}/{steps}")

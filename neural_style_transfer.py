@@ -23,20 +23,26 @@ if __name__ == "__main__":
     parser.add_argument(
         "--model", type=str, choices=["vgg19", "vgg16", "alexnet"], default="vgg19"
     )
-    parser.add_argument("--content_weight", type=float, default=1e5)
-    parser.add_argument("--style_weight", type=float, default=1e5)
+    parser.add_argument("--content_weight", type=float, default=1e6)
+    parser.add_argument("--style_weight", type=float, default=1e6)
     parser.add_argument(
-        "--tv_weight", type=float, default=1e-1, help="weight for total variation loss"
+        "--tv_weight", type=float, default=1e-2, help="weight for total variation loss"
     )
     parser.add_argument(
-        "--optimizer", 
-        type=str, 
-        choices=["adam", "lbfgs"], 
+        "--optimizer",
+        type=str,
+        choices=["adam", "lbfgs"],
         default="lbfgs",
-        help="optimizer choice (adam: 3000 steps, lbfgs: 1000 steps)"
+        help="optimizer choice",
     )
-    parser.add_argument("--lr", type=float, help="learning rate (default: 1.0 for LBFGS, 0.01 for Adam)")
-    parser.add_argument("--steps", type=int, help="number of iterations (default: 3000 for Adam, 1000 for LBFGS)")
+    parser.add_argument(
+        "--lr", type=float, help="learning rate (default: 0.1 for Adam)"
+    )
+    parser.add_argument(
+        "--steps",
+        type=int,
+        help="number of iterations (default: 3000 for Adam, 1000 for LBFGS)",
+    )
 
     args = parser.parse_args()
 
@@ -44,9 +50,9 @@ if __name__ == "__main__":
     if args.steps is None:
         args.steps = 1000 if args.optimizer == "lbfgs" else 3000
     if args.lr is None:
-        args.lr = 1.0 if args.optimizer == "lbfgs" else 0.01
+        args.lr = 0.1  # lr for Adam, we don't have to set for lbfgs
 
-    # Check for cuda or mps for MacOS
+    # Check for cuda or mps (for MacOS)
     if torch.cuda.is_available():
         device = torch.device("cuda")
     elif torch.backends.mps.is_available():
@@ -79,23 +85,24 @@ if __name__ == "__main__":
     if args.optimizer == "adam":
         optimizer = Adam([target_img], lr=args.lr)
     else:
-        optimizer = LBFGS([target_img], lr=args.lr)
+        optimizer = LBFGS([target_img], line_search_fn="strong_wolfe")
 
-    print(f"Running on {device} device")
-    print(f"Using {args.optimizer} optimizer with {args.steps} steps")
-    
+    print(f"\nRunning on {device} device")
+    print(f"Using {args.model} model and {args.optimizer} optimizer")
+    print(f"Training for {args.steps} steps\n")
+
     stylized_img = style_transfer(
-            content_img,
-            style_img,
-            target_img,
-            model,
-            args.model,
-            optimizer,
-            layer_style_weights,
-            args.style_weight,
-            args.content_weight,
-            args.tv_weight,
-            args.steps,
+        content_img,
+        style_img,
+        target_img,
+        model,
+        args.model,
+        optimizer,
+        layer_style_weights,
+        args.style_weight,
+        args.content_weight,
+        args.tv_weight,
+        args.steps,
     )
 
     # Generate output filename based on input images
