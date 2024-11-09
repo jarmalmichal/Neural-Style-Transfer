@@ -1,5 +1,5 @@
 A PyTorch implementation of Neural Style Transfer
-loosely based on the paper Image Style Transfer Using Convolutional Neural Networks by Gatys et al. but also includes TV (total variation) loss introduced in NST in Perceptual Losses for Real-Time Style Transfer and Super-Resolution by Johnson et al. This implementation supports multiple models (VGG19, VGG16 and AlexNet), optimization methods (LBFGS, Adam) and target image initialization method (using content or style images as target or gaussian noise).
+based on the paper Image Style Transfer Using Convolutional Neural Networks by Gatys et al. but also includes TV (total variation) loss introduced in NST in Perceptual Losses for Real-Time Style Transfer and Super-Resolution by Johnson et al. This implementation supports multiple models (VGG19, VGG16 and AlexNet), optimization methods (LBFGS, Adam) and target image initialization method (using content or style images as target or gaussian noise).
 
 
 **Key Features**
