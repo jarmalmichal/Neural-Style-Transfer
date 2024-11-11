@@ -21,9 +21,9 @@ VGG_STYLE_WEIGHTS = {
 }
 
 ALEXNET_STYLE_WEIGHTS = {
-    "conv1": 1,
-    "conv2": 0.75,
-    "conv3": 0.2,
-    "conv4": 0.2,
-    "conv5": 0.2,
+    "conv1": 0.15,
+    "conv2": 0.6,
+    "conv3": 0.8,     
+    "conv4": 0.4,
+    "conv5": 0.3,     
 }
