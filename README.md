@@ -1,5 +1,4 @@
-A PyTorch implementation of Neural Style Transfer
-based on the paper Image Style Transfer Using Convolutional Neural Networks by Gatys et al. but with a twist. It also includes TV (total variation) loss inspired by Perceptual Losses for Real-Time Style Transfer and Super-Resolution by Johnson et al. This implementation also supports multiple models (VGG19, VGG16 and AlexNet), optimization methods (LBFGS, Adam) and target image initialization methods (using content or style images as target or gaussian noise).
+A PyTorch implementation of Neural Style Transfer based on Gatys et al. "Image Style Transfer Using Convolutional Neural Networks", with total variation loss inspired by Johnson et al.'s "Perceptual Losses for Real-Time Style Transfer and Super-Resolution". This implementation includes multiple models, optimization and initialization methods.
 
 ![images](https://github.com/user-attachments/assets/5d93d330-b06f-48fc-a458-4c1f4a5b8b08)
 
@@ -7,9 +6,10 @@ based on the paper Image Style Transfer Using Convolutional Neural Networks by G
 
 * Multiple models support (VGG19, VGG16, AlexNet)
 * Different optimizers (LBFGS, Adam)
-* Different target image initialization method
+* Different target image initialization methods
 * Total Variation loss
-* Configurable content, style and tv weights, learning rate (for Adam) and number of steps
+* Configurable weights for content, style, and TV loss
+* Adjustable learning rate (for Adam optimizer) and number of steps
 
 
 **Installation**
@@ -20,7 +20,7 @@ based on the paper Image Style Transfer Using Convolutional Neural Networks by G
     cd Neural-Style-Transfer
     ```
 
-2. Create and activate conda environment (all dependencies will be installed automatically from environment.yml file):
+2. Create and activate conda environment:
     ```bash
     conda env create -f environment.yml
     conda activate nst
@@ -32,20 +32,19 @@ based on the paper Image Style Transfer Using Convolutional Neural Networks by G
     * Content images in images/content/
     * Style images in images/style/
 
-2. Run the style transfer:
-    You only need to provide name of images. There is no need for full path
+2. Run the style transfer (only image names required, not full paths):
     ```bash
     python3 neural_style_transfer.py --content_img your_content_img.jpg --style_img your_style_img.jpg
     ```
 
 
-**Comand Line Arguments**
+**Command Line Arguments**
 | Argument | Description |
 |----------|-------------|
 | `--content_img` | Content image name |
 | `--style_img` | Style image name |
 | `--target_img` | Target image initialization method (`content`/`style`/`random`) |
-| `--model` | Model to use (`vgg19`/`vgg16`/`alexnet`) |
+| `--model` | Model choice (`vgg19`/`vgg16`/`alexnet`) |
 | `--content_weight` | Weight for content loss |
 | `--style_weight` | Weight for style loss |
 | `--tv_weight` | Weight for total variation loss |
@@ -64,13 +63,13 @@ Implementation supports three models:
 **Optimizer Choice**
 * LBFGS (default): Standard choice for NST. Requires less steps but uses more memory therefore each step takes longer and overall process takes more time. May yield slightly better results and it does not require lr as Adam.
 
-* Adam: Requires more steps but it's faster and more memory efficient. In theory LBFGS being quasi-newton method can find more optimal solution but in practice results are nearly the same (see results dir, exactly the same hyperparams setting). It requires lr (and in case of some images lr needs to be tweaked differently) as with all first-order methods but in case of NST learning rate can be used as a "artistic tool" so to say. Different lr values will yield different results. In the end it all depends or subjective effect we want to achieve.
+* Adam: Requires more steps but it's faster and more memory efficient. In theory LBFGS being quasi-newton method can find more optimal solution but in practice results are nearly the same (see results dir, exactly the same hyperparams setting). It requires lr (and in case of some images lr needs to be tweaked differently) as with all first-order methods but in case of NST learning rate can be used as a "artistic tool" so to say. Different lr values will yield different results. In the end it all depends on subjective effect we want to achieve.
 
 
 **Image Initialization**
 * content: Initialize with content image (default, usually best results)
-* style: Initialize with style image (requires more steps to achieve similar results to content init)
-* random: Initialize with random (gaussian) noise (requires more steps to achieve similar results to content init)
+* style: Initialize with style image (requires more steps)
+* random: Initialize with random (gaussian) noise (requires more steps)
 
 
 **Weight Tuning**
