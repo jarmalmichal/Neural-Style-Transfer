@@ -59,15 +59,28 @@ based on the paper Image Style Transfer Using Convolutional Neural Networks by G
 Implementation supports three models:
 * VGG19 (default): Best results
 * VGG16: Results are nearly identical (examples in results dir, exactly the same hyperparams setting) but it's slightly faster
-* AlexNet: to-do
+* AlexNet: Much smaller model therefore it will produce lower quality results but they still look satisfying (examples in results dir). It requires more hyperparams tuning but it's much faster and computationally efficient.
+
+**Optimizer Choice**
+* LBFGS (default): Standard choice for NST. Requires less steps but uses more memory therefore each step takes longer and overall process takes more time. May yield slightly better results and it does not require lr as Adam.
+
+* Adam: Requires more steps but it's faster and more memory efficient. In theory LBFGS being quasi-newton method can find more optimal solution but in practice results are nearly the same (see results dir, exactly the same hyperparams setting). It requires lr (and in case of some images lr needs to be tweaked differently) as with all first-order methods but in case of NST learning rate can be used as a "artistic tool" so to say. Different lr values will yield different results. In the end it all depends or subjective effect we want to achieve.
 
 
+**Image Initialization**
+* content: Initialize with content image (default, usually best results)
+* style: Initialize with style image (requires more steps to achieve similar results to content init)
+* random: Initialize with random (gaussian) noise (requires more steps to achieve similar results to content init)
 
+
+**Weight Tuning**
+* Increase **content_weight** to preserve more content details
+* Increase **style_weight** for stronger stylization
+* Adjust **tv_weight** to control smoothness
 
 **Acknowledgments**
-
-* Implementation based on the paper by Gatys et al. Image Style Transfer Using Convolutional Neural Networks
-* Total Variation loss implementation inspired by Johnson et al.
+* Implementation based on the paper by Gatys et al. Image Style Transfer Using Convolutional Neural Networks - https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Gatys_Image_Style_Transfer_CVPR_2016_paper.pdf
+* Total Variation loss implementation inspired by Johnson et al. Perceptual Losses for Real-Time Style Transfer and Super-Resolution - https://arxiv.org/abs/1603.08155
 
 Content images:
 
