@@ -67,7 +67,7 @@ Implementation supports three models:
 
 
 **Image Initialization**
-* content: Initialize with content image (default, usually best results)
+* content: Initialize with content image (default, usually best results, see results dir)
 * style: Initialize with style image (requires more steps)
 * random: Initialize with random (gaussian) noise (requires more steps)
 
@@ -89,7 +89,7 @@ Content images:
 
 * Photo by Pixabay: https://www.pexels.com/photo/church-beside-sea-532581/
 
-* Neckarfront in Tübingen, a standard benchmark in style transfer literature (Gatys et al., 2015; Gatys et al., 2016; Johnson et al., 2016)
+* Neckarfront in Tübingen, a standard image in style transfer literature (Gatys et al., 2015; Gatys et al., 2016; Johnson et al., 2016)
 
 Style images:
 
