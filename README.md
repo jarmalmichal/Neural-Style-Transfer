@@ -1,4 +1,4 @@
-A PyTorch implementation of Neural Style Transfer based on Gatys et al. "Image Style Transfer Using Convolutional Neural Networks", with total variation loss inspired by Johnson et al.'s "Perceptual Losses for Real-Time Style Transfer and Super-Resolution". This implementation includes multiple models, optimization and initialization methods.
+A PyTorch implementation of Neural Style Transfer based on Gatys et al. "Image Style Transfer Using Convolutional Neural Networks", with total variation loss inspired by Johnson et al. "Perceptual Losses for Real-Time Style Transfer and Super-Resolution". This implementation includes multiple models, optimization and initialization methods.
 
 ![images](https://github.com/user-attachments/assets/5d93d330-b06f-48fc-a458-4c1f4a5b8b08)
 
@@ -88,6 +88,8 @@ Content images:
 * Photo by Ilo Frey: https://www.pexels.com/photo/photo-of-yellow-and-blue-macaw-with-one-wing-open-perched-on-a-wooden-stick-2317904/
 
 * Photo by Pixabay: https://www.pexels.com/photo/church-beside-sea-532581/
+
+* Neckarfront in Tübingen, a standard benchmark in style transfer literature (Gatys et al., 2015; Gatys et al., 2016; Johnson et al., 2016)
 
 Style images:
 
