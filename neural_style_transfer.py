@@ -106,7 +106,7 @@ if __name__ == "__main__":
     # Generate output filename based on input images
     content_name = os.path.splitext(args.content_img)[0]
     style_name = os.path.splitext(args.style_img)[0]
-    output_filename = f"{content_name}_stylized_by_{style_name}_using_{args.model}_{args.optimizer}_{args.target_img}.jpg"
+    output_filename = f"{content_name}_stylized_by_{style_name}_using_{args.model}_{args.optimizer}.jpg"
     output_path = os.path.join(config.RESULTS_DIR, output_filename)
 
     # Save the output image in the results directory
