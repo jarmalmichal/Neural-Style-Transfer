@@ -1,6 +1,6 @@
 A PyTorch implementation of Neural Style Transfer based on Gatys et al. "Image Style Transfer Using Convolutional Neural Networks", with total variation loss inspired by Johnson et al. "Perceptual Losses for Real-Time Style Transfer and Super-Resolution". This implementation includes multiple models, optimization and initialization methods.
 
-![images](https://github.com/user-attachments/assets/5d93d330-b06f-48fc-a458-4c1f4a5b8b08)
+
 
 **Key Features**
 
@@ -100,3 +100,5 @@ Style images:
 * Adolphe Joseph Thomas, Bouquet of Flowers, WikiArt Dataset - https://github.com/cs-chan/ArtGAN/tree/master/WikiArt%20Dataset
 
 * Edvard Munch, 1893, The Scream, Public domain, via Wikimedia Commons
+
+* Vassily Kandinsky, 1913 - Composition 7, Public domain, via Wikimedia Commons
