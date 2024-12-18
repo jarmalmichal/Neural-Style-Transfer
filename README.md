@@ -101,4 +101,6 @@ Style images:
 
 * Edvard Munch, 1893, The Scream, Public domain, via Wikimedia Commons
 
-* Vassily Kandinsky, 1913 - Composition 7, Public domain, via Wikimedia Commons
+* Vassily Kandinsky, 1913, Composition 7, Public domain, via Wikimedia Commons
+
+* Juan Gris, 1912, Portrait of Pablo Picasso, Public domain, via Wikimedia Commons
