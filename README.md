@@ -82,8 +82,8 @@ Implementation supports three models:
 * Total Variation loss implementation inspired by Johnson et al. Perceptual Losses for Real-Time Style Transfer and Super-Resolution - https://arxiv.org/abs/1603.08155
  
 These repos were useful:
-* [pytorch-neural-style-transfer] (https://github.com/gordicaleksa/pytorch-neural-style-transfer)
-* [style-transfer] (https://github.com/udacity/deep-learning-v2-pytorch/tree/master/style-transfer)
+- [pytorch-neural-style-transfer] (https://github.com/gordicaleksa/pytorch-neural-style-transfer)
+- [style-transfer] (https://github.com/udacity/deep-learning-v2-pytorch/tree/master/style-transfer)
 
 Content images:
 
