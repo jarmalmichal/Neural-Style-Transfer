@@ -80,6 +80,10 @@ Implementation supports three models:
 **Acknowledgments**
 * Implementation based on the paper by Gatys et al. Image Style Transfer Using Convolutional Neural Networks - https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Gatys_Image_Style_Transfer_CVPR_2016_paper.pdf
 * Total Variation loss implementation inspired by Johnson et al. Perceptual Losses for Real-Time Style Transfer and Super-Resolution - https://arxiv.org/abs/1603.08155
+ 
+These repos were useful:
+* [pytorch-neural-style-transfer]
+* [style-transfer]
 
 Content images:
 
