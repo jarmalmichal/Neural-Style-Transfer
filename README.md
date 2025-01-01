@@ -107,7 +107,7 @@ Style images:
 
 * Edvard Munch, 1893, The Scream, Public domain, via Wikimedia Commons
 
-* Mosaic image from https://github.com/pytorch/examples/tree/main/fast_neural_style/images/style-images
+* Mosaic image from https://github.com/pytorch/examples/blob/main/fast_neural_style/images/style-images/mosaic.jpg
 
 * Rain Princess, Leonid Afremov from https://github.com/pytorch/examples/blob/main/fast_neural_style/images/style-images/rain-princess.jpg
 
