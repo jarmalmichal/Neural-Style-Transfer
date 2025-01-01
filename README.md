@@ -1,6 +1,6 @@
 A PyTorch implementation of Neural Style Transfer based on Gatys et al. "Image Style Transfer Using Convolutional Neural Networks", with total variation loss inspired by styJohnson et al. "Perceptual Losses for Real-Time Style Transfer and Super-Resolution". This implementation includes multiple models, optimization and initialization methods.
 
-![nst-results](https://github.com/user-attachments/assets/3af7d01e-c8d8-454b-9d48-d3c238141f80)
+![nst-results](https://github.com/user-attachments/assets/4d153dfa-fa74-4d39-926f-fed08c299d99)
 
 **Key Features**
 
