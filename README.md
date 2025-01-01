@@ -89,11 +89,13 @@ Content images:
 
 * Photo by Sophie Otto: https://www.pexels.com/photo/city-hall-in-hamburg-by-the-river-20347993/
 
-* Photo by Ilo Frey: https://www.pexels.com/photo/photo-of-yellow-and-blue-macaw-with-one-wing-open-perched-on-a-wooden-stick-2317904/
-
 * Photo by Pixabay: https://www.pexels.com/photo/church-beside-sea-532581/
 
+* Photo by Pixabay: https://www.pexels.com/photo/closed-brown-wooden-door-220580/
+
 * Neckarfront in Tübingen, a standard image in style transfer literature (Gatys et al., 2015; Gatys et al., 2016; Johnson et al., 2016)
+
+* Lion image from https://github.com/cysmith/neural-style-tf/blob/master/image_input/lion.jpg
 
 Style images:
 
@@ -105,6 +107,7 @@ Style images:
 
 * Edvard Munch, 1893, The Scream, Public domain, via Wikimedia Commons
 
-* Vassily Kandinsky, 1913, Composition 7, Public domain, via Wikimedia Commons
+* Mosaic image from https://github.com/pytorch/examples/tree/main/fast_neural_style/images/style-images
 
-* Juan Gris, 1912, Portrait of Pablo Picasso, Public domain, via Wikimedia Commons
+* Rain Princess, Leonid Afremov from https://github.com/pytorch/examples/blob/main/fast_neural_style/images/style-images/rain-princess.jpg
+
