@@ -87,14 +87,6 @@ These repos were useful:
 
 Content images:
 
-* Photo by Sophie Otto: https://www.pexels.com/photo/city-hall-in-hamburg-by-the-river-20347993/
-
-* Photo by Pixabay: https://www.pexels.com/photo/church-beside-sea-532581/
-
-* Photo by Pixabay: https://www.pexels.com/photo/closed-brown-wooden-door-220580/
-
-* Neckarfront in Tübingen, a standard image in style transfer literature (Gatys et al., 2015; Gatys et al., 2016; Johnson et al., 2016)
-
 * Lion image from https://github.com/cysmith/neural-style-tf/blob/master/image_input/lion.jpg
 
 Style images:
