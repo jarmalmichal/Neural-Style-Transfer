@@ -91,15 +91,13 @@ Content images:
 
 Style images:
 
-* The Starry Night, Vincent van Gogh, Public domain, via Wikimedia Commons
-
 * The Great Wave off Kanagawa, After Katsushika Hokusai, Public domain, via Wikimedia Commons
 
-* Adolphe Joseph Thomas, Bouquet of Flowers, WikiArt Dataset - https://github.com/cs-chan/ArtGAN/tree/master/WikiArt%20Dataset
-
-* Edvard Munch, 1893, The Scream, Public domain, via Wikimedia Commons
-
-* Mosaic image from https://github.com/pytorch/examples/blob/main/fast_neural_style/images/style-images/mosaic.jpg
-
 * Rain Princess, Leonid Afremov from https://github.com/pytorch/examples/blob/main/fast_neural_style/images/style-images/rain-princess.jpg
+
+* H.R. Giger Art
+
+* Dying by Alex Grey - https://www.alexgrey.com/art/progress-of-the-soul/dying
+
+* Godself by Alex Grey - https://www.alexgrey.com/art/progress-of-the-soul/godself
 
